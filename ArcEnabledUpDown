@@ -1,0 +1,5 @@
+Heartbeat
+| where TimeGenerated > ago(5m)
+| summarize LastHeartbeat = max(TimeGenerated) by Computer
+| extend Status = iff(LastHeartbeat < ago(5m), "Down", "Up")
+| project Computer, LastHeartbeat, Status
