@@ -1,0 +1,11 @@
+resources 
+| where type =~ "Microsoft.Compute/virtualMachines" 
+| mv-expand nic = properties.networkProfile.networkInterfaces 
+| extend nicId = tostring(nic.id), powerState = tostring(properties.extended.instanceView.powerState.displayStatus)
+| project vmName = name, vmId = id, nicId, powerState
+| join kind=inner (
+    resources 
+    | where type =~ "Microsoft.Network/networkInterfaces" 
+    | extend nicId = tostring(id) 
+    | project nicId, defaultOutboundAccess = properties.defaultOutboundConnectivityEnabled
+) on $left.nicId == $right.nicId
