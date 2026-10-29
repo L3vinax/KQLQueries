@@ -1127,7 +1127,6 @@
     Severity:string
 )
 
-.alter table PanAudit policy retention softdelete = 365d recoverability = enabled
 
 // Optional raw landing table. Route all Event Hub records here first, then parse into type-specific tables.
 .create-merge table PanRaw (IngestionTime:datetime, RawData:string)
